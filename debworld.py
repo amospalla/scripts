@@ -1,17 +1,5 @@
 #!/usr/bin/env python
 
-# cache[pkgname].essential: bool
-# cache[pkgname].is_auto_installed: bool
-# cache[pkgname].mark_auto(auto=bool)
-# cache[pkgname].mark_delete(purge=bool)
-
-# marcar automatic
-# depcache.mark_auto(cache[package.name])
-# instalar paquet i dependencies. Marcar automatic
-# depcache.mark_install(cache[package.name], auto_inst=True, from_user= False)
-# instalar paquet i dependencies. Marcar manual
-# depcache.mark_install(cache[package.name], auto_inst=True, from_user= True)
-
 try:
     import apt
     import apt_pkg
@@ -123,47 +111,43 @@ for package in apt_cache:
 
     # If package is installed (essential/important discarded)
     elif installed:
-    	if name not in packages:
-    		if not automatic:
-    			if arguments.dryrun:
-    				print "! Package " + name + " not referenced and manual"
-    			else:
-    				print "\nMark not referenced package " + name + " manual"
-    				package.mark_auto(auto=True)
-    	else:
+        if name not in packages:
+            if not automatic:
+                if arguments.dryrun:
+                    print "! Package " + name + " not referenced and manual"
+                else:
+                    print "\nMark not referenced package " + name + " manual"
+                    package.mark_auto(auto=True)
+        else:
             packages_referenced[name] = True
-       	    if packagesautomatic[name] and not automatic:
-       	    	if arguments.dryrun:
-       	    		print "! Package " + name + " referenced as automatic but is manual"
-       	    	else:
-       	    		print "\nMark referenced package " + name + " automatic"
-       	    		package.mark_auto(auto=True)
-       	    elif not packagesautomatic[name] and automatic:
-       	    	if arguments.dryrun:
-       	    		print "! Package " + name + " referenced as manual but is automatic"
-       	    	else:
-       	    		print "\nMark referenced package " + name + " manual"
-       	    		package.mark_auto(auto=False)
+            if packagesautomatic[name] and not automatic:
+                if arguments.dryrun:
+                    print "! Package " + name + " referenced as automatic but is manual"
+                else:
+                    print "\nMark referenced package " + name + " automatic"
+                    package.mark_auto(auto=True)
+            elif not packagesautomatic[name] and automatic:
+                if arguments.dryrun:
+                    print "! Package " + name + " referenced as manual but is automatic"
+                else:
+                    print "\nMark referenced package " + name + " manual"
+                    package.mark_auto(auto=False)
  
     # only not installed or not essential/important packages
     elif name in packages:
         packages_referenced[name] = True
-    	if arguments.dryrun:
-    		print "! Package " + name + " referenced but not installed"
-    	else:
-    		print "\nInstall referenced package " + name
-    		package.mark_install()
-    		if packagesautomatic[name]:
-    			package.mark_auto(auto=True)
-    		else:
-    			package.mark_install(from_user=False)
+        if arguments.dryrun:
+            print "! Package " + name + " referenced but not installed"
+        else:
+            print "\nInstall referenced package " + name
+            package.mark_install()
+            if packagesautomatic[name]:
+                package.mark_auto(auto=True)
+            else:
+                package.mark_install(from_user=False)
 
 if not arguments.dryrun: apt_cache.commit()
 
 for package in packages:
     if packages_referenced[package] == False:
         print "Warning: " + package + " not referenced"
-
-# depcache.is_auto_installed(apt_pkg_cache[name])
-                        # apt_pkg_cache[name].current_ver.arch
-                                # package.mark_delete(purge=True)
