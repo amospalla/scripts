@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # cache[pkgname].essential: bool
 # cache[pkgname].is_auto_installed: bool
