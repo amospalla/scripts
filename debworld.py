@@ -93,7 +93,7 @@ for package in apt_cache:
     if essential or priority < 3:
         if name in packages:
             print "Warning: package " + name + " included in definitions file, not needed"
-            packages_referenced = True
+            packages_referenced[name] = True
         if not installed:
             print arch
             if arguments.dryrun:
