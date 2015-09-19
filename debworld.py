@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# FileVersion=1
+
 try:
     import apt
     import apt_pkg
@@ -95,7 +97,6 @@ for package in apt_cache:
             print "Warning: package " + name + " included in definitions file, not needed"
             packages_referenced[name] = True
         if not installed:
-            print arch
             if arguments.dryrun:
                 print "! Essential/important package " + name + " not installed (priority:" + str(priority) + ")"
             else:
